@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-public class playerMovement : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     CharacterController characterController;
     float moveSpeed = 10;
@@ -31,7 +31,7 @@ public class playerMovement : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void moveRpc(float vert, float hor)
+    void MoveRpc(float vert, float hor)
     {
         characterController.Move(transform.forward * vert * moveSpeed * Time.deltaTime);
 

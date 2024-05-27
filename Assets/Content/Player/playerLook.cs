@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-public class playerLook : NetworkBehaviour
+public class PlayerLook : NetworkBehaviour
 {
     float 
         lookSensivity = 3,
@@ -36,7 +36,7 @@ public class playerLook : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void mouseLookRpc(float mX, float mY)
+    void MouseLookRpc(float mX, float mY)
     {
         mouseX += mX * lookSensivity;
         mouseY += -mY * lookSensivity;

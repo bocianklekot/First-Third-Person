@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-public class rigidbodyPush : NetworkBehaviour
+public class RigidbodyPush : NetworkBehaviour
 {
     Camera camera;
     public float forceAmount = 1;
@@ -22,13 +22,13 @@ public class rigidbodyPush : NetworkBehaviour
             if (!hit.collider.GetComponent<Rigidbody>())
                 return;
 
-            addForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
+            AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
             
         }
     }
 
     [Rpc(SendTo.Server)]
-    void addForceRpc(NetworkObjectReference reference, Vector3 force)
+    void AddForceRpc(NetworkObjectReference reference, Vector3 force)
     {
         reference.TryGet(out NetworkObject networkObject);
         networkObject.GetComponent<Rigidbody>().AddForce(force * forceAmount, ForceMode.VelocityChange);
