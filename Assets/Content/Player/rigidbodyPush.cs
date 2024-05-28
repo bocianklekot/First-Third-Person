@@ -22,9 +22,18 @@ public class RigidbodyPush : NetworkBehaviour
             if (!hit.collider.GetComponent<Rigidbody>())
                 return;
 
-            AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
-            
+            if (hit.collider.GetComponent<NetworkObject>())
+                AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
+            else
+                AddForceCl(hit.collider.gameObject, camera.transform.forward.normalized);
+
+
         }
+    }
+
+    void AddForceCl(GameObject go, Vector3 force)
+    {
+        go.GetComponent<Rigidbody>().AddForce(force * forceAmount, ForceMode.VelocityChange);
     }
 
     [Rpc(SendTo.Server)]
