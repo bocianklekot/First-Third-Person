@@ -16,7 +16,7 @@ public class AutoRagdollMassChild : MonoBehaviour
         {
             if (name == "head")
                 rb.mass = mass * 0.08f;
-            else if (name == "spine01" || name == "spine02" || name == "spine03")
+            else if (name == "spine1" || name == "spine2" || name == "spine3")
                 rb.mass = mass * (.50f / 3);
             else if (name == "l_upperArm" | name == "r_upperArm")
                 rb.mass = mass * 0.027f;
