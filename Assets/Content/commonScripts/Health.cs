@@ -22,7 +22,7 @@ public class Health : MonoBehaviour
         arm
     }
     
-    public void TakeDamage(float damage, RaycastHit hit)
+    public void TakeDamage(float damage, RaycastHit hit, Vector3 force)
     {
         if (invincible)
             return;
@@ -42,7 +42,7 @@ public class Health : MonoBehaviour
 
                     if (bodyParts[i].partHealth <= 0)
                     {
-                        GetComponent<EnemyAIBase>().DetachPartRpc(i);
+                        GetComponent<EnemyAIBase>().DetachPartRpc(i, CustomFunctions.Vector3ToFloat(force));
                         Debug.Log("health");
                     }
                        

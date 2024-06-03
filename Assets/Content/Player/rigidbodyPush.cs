@@ -5,9 +5,9 @@ using Unity.Netcode;
 public class RigidbodyPush : NetworkBehaviour
 {
     bool inputReady = true;
-    float damage = 25;
+    float damage = 999;
     Camera camera;
-    float forceAmount = 15;
+    float forceAmount = 100;
     void Start()
     {
         camera = GetComponentInChildren<Camera>();
@@ -33,7 +33,7 @@ public class RigidbodyPush : NetworkBehaviour
                 {
 
                     if (hit.collider.transform.root.GetComponent<Health>())
-                        hit.collider.transform.root.GetComponent<Health>().TakeDamage(damage, hit);
+                        hit.collider.transform.root.GetComponent<Health>().TakeDamage(damage, hit, camera.transform.forward.normalized*forceAmount);
 
                     if (hit.collider.GetComponent<NetworkObject>())
                         AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
@@ -49,13 +49,9 @@ public class RigidbodyPush : NetworkBehaviour
 
                 if (hit.collider.GetComponent<Rigidbody>())
                 {
-                    if (hit.collider.transform.root.GetComponent<EnemyConceptAI>())
-                        StartCoroutine(hit.collider.transform.root.GetComponent<EnemyConceptAI>().Knockout(hit.collider.gameObject, 5, camera.transform.forward.normalized * forceAmount));
+                    if (hit.collider.transform.root.GetComponent<EnemyAIBase>())
+                        StartCoroutine(hit.collider.transform.root.GetComponent<EnemyAIBase>().Knockout(hit.collider.gameObject, 5, camera.transform.forward.normalized * forceAmount));
 
-                    if (hit.collider.GetComponent<NetworkObject>())
-                        AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
-                    else
-                        AddForceCl(hit.collider.gameObject, camera.transform.forward.normalized);
                 }
             }
 
