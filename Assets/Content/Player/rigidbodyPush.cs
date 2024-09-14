@@ -5,7 +5,7 @@ using Unity.Netcode;
 public class RigidbodyPush : NetworkBehaviour
 {
     bool inputReady = true;
-    float damage = 999;
+    float damage = 25;
     Camera camera;
     float forceAmount = 100;
     void Start()
@@ -33,12 +33,20 @@ public class RigidbodyPush : NetworkBehaviour
                 {
 
                     if (hit.collider.transform.root.GetComponent<Health>())
-                        hit.collider.transform.root.GetComponent<Health>().TakeDamage(damage, hit, camera.transform.forward.normalized*forceAmount);
-
-                    if (hit.collider.GetComponent<NetworkObject>())
-                        AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
+                    {
+                        hit.collider.transform.root.GetComponent<Health>().TakeDamage(damage, hit, camera.transform.forward.normalized * forceAmount);
+                        GameObject fx = Instantiate(Resources.Load("BloodImpact01FX") as GameObject, hit.point, Quaternion.LookRotation(hit.normal), hit.collider.transform);
+                        Destroy(fx, 3);
+                    }
                     else
-                        AddForceCl(hit.collider.gameObject, camera.transform.forward.normalized);
+                    {
+                        if (hit.collider.GetComponent<NetworkObject>())
+                            AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
+                        else
+                            AddForceCl(hit.collider.gameObject, camera.transform.forward.normalized);
+                    }
+
+                    
                 }    
             }
 
@@ -50,7 +58,7 @@ public class RigidbodyPush : NetworkBehaviour
                 if (hit.collider.GetComponent<Rigidbody>())
                 {
                     if (hit.collider.transform.root.GetComponent<EnemyAIBase>())
-                        StartCoroutine(hit.collider.transform.root.GetComponent<EnemyAIBase>().Knockout(hit.collider.gameObject, 5, camera.transform.forward.normalized * forceAmount));
+                        StartCoroutine(hit.collider.transform.root.GetComponent<EnemyAIBase>().Knockout(hit.collider.gameObject, 3.2f, camera.transform.forward.normalized * forceAmount));
 
                 }
             }

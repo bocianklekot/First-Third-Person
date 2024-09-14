@@ -40,10 +40,15 @@ public class Health : MonoBehaviour
                 {
                     bodyParts[i].partHealth -= damage;
 
+                    var aiBase = GetComponent<EnemyAIBase>();
+                    if(bodyParts[i].partHealth / damage < 3.5 && aiBase.passiveState != EnemyAIBase.EnemyPassiveStates.knockedOut) // 3.5 ma byc
+                        StartCoroutine(aiBase.DecideTakeDamageAnimation()); 
+
                     if (bodyParts[i].partHealth <= 0)
                     {
-                        GetComponent<EnemyAIBase>().DetachPartRpc(i, CustomFunctions.Vector3ToFloat(force));
-                        Debug.Log("health");
+                       
+                        aiBase.DetachPartRpc(i, CustomFunctions.Vector3ToFloat(force));
+                        
                     }
                        
                 }
@@ -69,6 +74,8 @@ public class Health : MonoBehaviour
             else if (bodyParts[i].type == BodyPartTypes.leg)
                 bodyParts[i].partHealth = health * 0.35f;
         }
+
+        GetComponent<EnemyAIBase>().RefreshPartsCount();
     }
 
     [System.Serializable]
