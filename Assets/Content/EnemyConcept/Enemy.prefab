@@ -10,12 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2356159587730752776}
   - component: {fileID: 4308520582050260030}
-  - component: {fileID: -5067047682911120691}
   - component: {fileID: -7053685979584569988}
+  - component: {fileID: -5067047682911120691}
   - component: {fileID: -5584218629905773462}
   - component: {fileID: -6544578324605096815}
   - component: {fileID: 5838147047654000555}
   - component: {fileID: -3553354181722858206}
+  - component: {fileID: 3550753000891038161}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -53,76 +54,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 80
   type: 0
---- !u!114 &-5067047682911120691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2469790691852655121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95a3d2953debe7a47b987ad1ffdfedb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 250
-  invincible: 0
-  complex: 1
-  bodyParts:
-  - partHealth: 0
-    parts:
-    - {fileID: 2417011390350034610}
-    - {fileID: 7009763262798470723}
-    colliders:
-    - {fileID: 5289885053389139968}
-    - {fileID: 6658714673406787204}
-    - {fileID: 4507798209788338603}
-    type: 0
-    childNpcName: torso
-  - partHealth: 0
-    parts:
-    - {fileID: 7926366311883805899}
-    colliders:
-    - {fileID: 198174001329351828}
-    - {fileID: 4552328943509749178}
-    type: 1
-    childNpcName: head
-  - partHealth: 0
-    parts:
-    - {fileID: 6721100311731996886}
-    colliders:
-    - {fileID: 4462550010661258032}
-    - {fileID: 1797721030535576908}
-    - {fileID: 7655092973257845812}
-    type: 3
-    childNpcName: leftArm
-  - partHealth: 0
-    parts:
-    - {fileID: 2027316415464869510}
-    colliders:
-    - {fileID: 2267175294365646034}
-    - {fileID: 1299184375971098390}
-    - {fileID: 5790765271429614240}
-    type: 3
-    childNpcName: rightArm
-  - partHealth: 0
-    parts:
-    - {fileID: 3848270660660615537}
-    colliders:
-    - {fileID: 4569862007905813956}
-    - {fileID: 4017055886425025932}
-    - {fileID: 5009253779902838036}
-    type: 2
-    childNpcName: leftLeg
-  - partHealth: 0
-    parts:
-    - {fileID: 8019508537544113918}
-    colliders:
-    - {fileID: 4258033438294056}
-    - {fileID: 5540631391492212472}
-    - {fileID: 6356523116848818806}
-    type: 2
-    childNpcName: rightLeg
 --- !u!114 &-7053685979584569988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +75,83 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &-5067047682911120691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2469790691852655121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a3d2953debe7a47b987ad1ffdfedb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    m_InternalValue: 100
+  invincible: 0
+  complex: 1
+  bodyParts:
+  - partHealth:
+      m_InternalValue: 0
+    parts:
+    - {fileID: 2417011390350034610}
+    - {fileID: 7009763262798470723}
+    colliders:
+    - {fileID: 5289885053389139968}
+    - {fileID: 6658714673406787204}
+    - {fileID: 4507798209788338603}
+    type: 0
+    childNpcName: torso
+  - partHealth:
+      m_InternalValue: 0
+    parts:
+    - {fileID: 7926366311883805899}
+    colliders:
+    - {fileID: 198174001329351828}
+    - {fileID: 4552328943509749178}
+    type: 1
+    childNpcName: head
+  - partHealth:
+      m_InternalValue: 0
+    parts:
+    - {fileID: 6721100311731996886}
+    colliders:
+    - {fileID: 4462550010661258032}
+    - {fileID: 1797721030535576908}
+    - {fileID: 7655092973257845812}
+    type: 3
+    childNpcName: leftArm
+  - partHealth:
+      m_InternalValue: 0
+    parts:
+    - {fileID: 2027316415464869510}
+    colliders:
+    - {fileID: 2267175294365646034}
+    - {fileID: 1299184375971098390}
+    - {fileID: 5790765271429614240}
+    type: 3
+    childNpcName: rightArm
+  - partHealth:
+      m_InternalValue: 0
+    parts:
+    - {fileID: 3848270660660615537}
+    colliders:
+    - {fileID: 4569862007905813956}
+    - {fileID: 4017055886425025932}
+    - {fileID: 5009253779902838036}
+    type: 2
+    childNpcName: leftLeg
+  - partHealth:
+      m_InternalValue: 0
+    parts:
+    - {fileID: 8019508537544113918}
+    colliders:
+    - {fileID: 4258033438294056}
+    - {fileID: 5540631391492212472}
+    - {fileID: 6356523116848818806}
+    type: 2
+    childNpcName: rightLeg
 --- !u!114 &-5584218629905773462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,8 +164,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09e94394c03b104d802a5934986674d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveState: 0
-  activeState: 0
+  passiveState:
+    m_InternalValue: 0
+  activeState:
+    m_InternalValue: 0
   attacs:
   - bodyPartElement: 3
     animationName: humanoid01|standRightArmAttack
@@ -271,6 +281,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3550753000891038161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2469790691852655121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1001 &2878520062939527942
 PrefabInstance:
   m_ObjectHideFlags: 0

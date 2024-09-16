@@ -16,7 +16,7 @@ public class RigidbodyPush : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!inputReady)
+        if (!inputReady | !IsLocalPlayer)
             return;
 
         inputReady = false;

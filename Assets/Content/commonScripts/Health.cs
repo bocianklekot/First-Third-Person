@@ -1,17 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Health : MonoBehaviour
+using Unity.Netcode;
+public class Health : NetworkBehaviour
 {
-    public float health = 100;
+    public NetworkVariable<float> health = new(100);
     public bool invincible, complex;
     public BodyPart[] bodyParts;
 
     private void Start()
     {
-        if(complex)
-            AutoBodyPartsHealth();
+        NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+        
+        /*
+        if (!NetworkManager.IsServer)
+            return;
+
+        if (complex)
+            AutoBodyPartsHealth();*/
+    }
+
+    private void OnServerStarted()
+    {
+        if (!NetworkManager.IsServer)
+            return;
+
+        AutoBodyPartsHealth();
     }
 
     public enum BodyPartTypes
@@ -29,7 +43,7 @@ public class Health : MonoBehaviour
 
         if (!complex)
         {
-            health -= damage;
+            SimpleDamageRpc(damage);
             return;
         }
         for (int i = 0; i < bodyParts.Length; i++)
@@ -38,17 +52,15 @@ public class Health : MonoBehaviour
             {
                 if (collider == hit.collider)
                 {
-                    bodyParts[i].partHealth -= damage;
+                    BodyPartDamageRpc(damage, i);
 
                     var aiBase = GetComponent<EnemyAIBase>();
-                    if(bodyParts[i].partHealth / damage < 3.5 && aiBase.passiveState != EnemyAIBase.EnemyPassiveStates.knockedOut) // 3.5 ma byc
-                        StartCoroutine(aiBase.DecideTakeDamageAnimation()); 
+                    if (bodyParts[i].partHealth.Value / damage < 3.5 && aiBase.passiveState.Value != EnemyAIBase.EnemyPassiveStates.knockedOut) // 3.5 ma byc
+                        aiBase.DecideTakeDamageAnimationRpc();
 
-                    if (bodyParts[i].partHealth <= 0)
+                    if (bodyParts[i].partHealth.Value <= 0)
                     {
-                       
                         aiBase.DetachPartRpc(i, CustomFunctions.Vector3ToFloat(force));
-                        
                     }
                        
                 }
@@ -58,21 +70,34 @@ public class Health : MonoBehaviour
 
     }
 
+    [Rpc(SendTo.Server)]
+    void SimpleDamageRpc(float dmg)
+    {
+        health.Value -= dmg;
+    }
+
+    [Rpc(SendTo.Server)]
+    void BodyPartDamageRpc(float dmg, int i)
+    {
+        Debug.Log(dmg);
+        bodyParts[i].partHealth.Value -= dmg;
+    }
+
     void AutoBodyPartsHealth()
     {
         for(int i = 0; i < bodyParts.Length; i++)
         {
-            if (bodyParts[i].partHealth != 0)
+            if (bodyParts[i].partHealth.Value != 0)
                 return;
 
             if (bodyParts[i].type == BodyPartTypes.torso)
-                bodyParts[i].partHealth = health * 0.5f;
+                bodyParts[i].partHealth.Value = health.Value * 0.5f;
             else if(bodyParts[i].type == BodyPartTypes.head)
-                bodyParts[i].partHealth = health * 0.1f;
+                bodyParts[i].partHealth.Value = health.Value * 0.1f;
             else if (bodyParts[i].type == BodyPartTypes.arm)
-                bodyParts[i].partHealth = health * 0.25f;
+                bodyParts[i].partHealth.Value = health.Value * 0.25f;
             else if (bodyParts[i].type == BodyPartTypes.leg)
-                bodyParts[i].partHealth = health * 0.35f;
+                bodyParts[i].partHealth.Value = health.Value * 0.35f;
         }
 
         GetComponent<EnemyAIBase>().RefreshPartsCount();
@@ -81,7 +106,7 @@ public class Health : MonoBehaviour
     [System.Serializable]
     public struct BodyPart
     {
-        public float partHealth;
+        public NetworkVariable<float> partHealth;
         public Transform[] parts;
         public Collider[] colliders;
         public BodyPartTypes type;
