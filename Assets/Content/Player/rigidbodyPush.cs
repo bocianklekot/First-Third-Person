@@ -23,8 +23,8 @@ public class RigidbodyPush : NetworkBehaviour
         StartCoroutine(mainLoop());
         IEnumerator mainLoop()
         {
-            
-            if (Input.GetAxis("Fire1") > 0)
+
+            if (Input.GetAxis("Fire1") > 0/* && Physics.Raycast(camera.transform.position, camera.transform.forward, 5, 0, QueryTriggerInteraction.Collide)*/)
             {
                 RaycastHit hit;
                 Physics.Raycast(camera.transform.position, camera.transform.forward, out hit);
@@ -46,8 +46,8 @@ public class RigidbodyPush : NetworkBehaviour
                             AddForceCl(hit.collider.gameObject, camera.transform.forward.normalized);
                     }
 
-                    
-                }    
+
+                }
             }
 
             if (Input.GetAxis("Kick") > 0)

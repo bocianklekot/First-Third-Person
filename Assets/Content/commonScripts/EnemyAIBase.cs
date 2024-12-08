@@ -182,7 +182,7 @@ public class EnemyAIBase : NetworkBehaviour
                 bool continue_ = true;
                 foreach (Health.BodyPart part in healthComponent.bodyParts)
                 {
-                    if (part.partHealth.Value <= 0 && part.type != Health.BodyPartTypes.torso)
+                    if (part.partHealth <= 0 && part.type != Health.BodyPartTypes.torso)
                     {
                         AddForce(CustomFunctions.FloatToVector3(force),
                             SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName));
@@ -197,7 +197,7 @@ public class EnemyAIBase : NetworkBehaviour
                 {
                     foreach (Health.BodyPart part in healthComponent.bodyParts)
                     {
-                        if (part.partHealth.Value > 0 && part.type != Health.BodyPartTypes.torso)
+                        if (part.partHealth > 0 && part.type != Health.BodyPartTypes.torso)
                         {
                             AddForce(CustomFunctions.FloatToVector3(force),
                             SpawnNewEnemyPart(part.parts[0].GetComponent<SkinnedMeshRenderer>().bounds.center, part.childNpcName));
@@ -254,7 +254,7 @@ public class EnemyAIBase : NetworkBehaviour
         int counter = 0;
         foreach (Health.BodyPart part in healthComponent.bodyParts)
         {           
-            if (part.type == Health.BodyPartTypes.leg && part.partHealth.Value > 0)
+            if (part.type == Health.BodyPartTypes.leg && part.partHealth > 0)
             {
                 counter += 1;
             }
@@ -320,7 +320,7 @@ public class EnemyAIBase : NetworkBehaviour
 
         foreach(AttackDef attack in attacs)
         {
-            if (healthComponent.bodyParts[attack.bodyPartElement].partHealth.Value <= 0)
+            if (healthComponent.bodyParts[attack.bodyPartElement].partHealth <= 0)
                 continue;
 
             if (attack.mustStand && startLegs != legs)

@@ -17,8 +17,8 @@ GameObject:
   - component: {fileID: 5838147047654000555}
   - component: {fileID: -3553354181722858206}
   - component: {fileID: 3550753000891038161}
-  m_Layer: 0
-  m_Name: Enemy
+  m_Layer: 2
+  m_Name: EnemyNPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,8 +92,7 @@ MonoBehaviour:
   invincible: 0
   complex: 1
   bodyParts:
-  - partHealth:
-      m_InternalValue: 0
+  - partHealth: 0
     parts:
     - {fileID: 2417011390350034610}
     - {fileID: 7009763262798470723}
@@ -103,8 +102,7 @@ MonoBehaviour:
     - {fileID: 4507798209788338603}
     type: 0
     childNpcName: torso
-  - partHealth:
-      m_InternalValue: 0
+  - partHealth: 0
     parts:
     - {fileID: 7926366311883805899}
     colliders:
@@ -112,8 +110,7 @@ MonoBehaviour:
     - {fileID: 4552328943509749178}
     type: 1
     childNpcName: head
-  - partHealth:
-      m_InternalValue: 0
+  - partHealth: 0
     parts:
     - {fileID: 6721100311731996886}
     colliders:
@@ -122,8 +119,7 @@ MonoBehaviour:
     - {fileID: 7655092973257845812}
     type: 3
     childNpcName: leftArm
-  - partHealth:
-      m_InternalValue: 0
+  - partHealth: 0
     parts:
     - {fileID: 2027316415464869510}
     colliders:
@@ -132,8 +128,7 @@ MonoBehaviour:
     - {fileID: 5790765271429614240}
     type: 3
     childNpcName: rightArm
-  - partHealth:
-      m_InternalValue: 0
+  - partHealth: 0
     parts:
     - {fileID: 3848270660660615537}
     colliders:
@@ -142,8 +137,7 @@ MonoBehaviour:
     - {fileID: 5009253779902838036}
     type: 2
     childNpcName: leftLeg
-  - partHealth:
-      m_InternalValue: 0
+  - partHealth: 0
     parts:
     - {fileID: 8019508537544113918}
     colliders:

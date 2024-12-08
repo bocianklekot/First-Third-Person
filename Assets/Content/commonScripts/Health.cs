@@ -11,6 +11,8 @@ public class Health : NetworkBehaviour
     private void Start()
     {
         NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         
         /*
         if (!NetworkManager.IsServer)
@@ -19,13 +21,20 @@ public class Health : NetworkBehaviour
         if (complex)
             AutoBodyPartsHealth();*/
     }
+    private void OnClientConnected(ulong clientId)
+    {
+        SyncBodyPartsHealthRpc();
+        Debug.Log("sync");
+    }
 
     private void OnServerStarted()
     {
+        Debug.Log("autohealth");
         if (!NetworkManager.IsServer)
             return;
 
         AutoBodyPartsHealth();
+        
     }
 
     public enum BodyPartTypes
@@ -55,10 +64,10 @@ public class Health : NetworkBehaviour
                     BodyPartDamageRpc(damage, i);
 
                     var aiBase = GetComponent<EnemyAIBase>();
-                    if (bodyParts[i].partHealth.Value / damage < 3.5 && aiBase.passiveState.Value != EnemyAIBase.EnemyPassiveStates.knockedOut) // 3.5 ma byc
+                    if (bodyParts[i].partHealth / damage < 3.5 && aiBase.passiveState.Value != EnemyAIBase.EnemyPassiveStates.knockedOut) // 3.5 ma byc
                         aiBase.DecideTakeDamageAnimationRpc();
 
-                    if (bodyParts[i].partHealth.Value <= 0)
+                    if (bodyParts[i].partHealth <= 0)
                     {
                         aiBase.DetachPartRpc(i, CustomFunctions.Vector3ToFloat(force));
                     }
@@ -80,24 +89,24 @@ public class Health : NetworkBehaviour
     void BodyPartDamageRpc(float dmg, int i)
     {
         Debug.Log(dmg);
-        bodyParts[i].partHealth.Value -= dmg;
+        bodyParts[i].partHealth -= dmg;
     }
 
     void AutoBodyPartsHealth()
     {
         for(int i = 0; i < bodyParts.Length; i++)
         {
-            if (bodyParts[i].partHealth.Value != 0)
+            if (bodyParts[i].partHealth != 0)
                 return;
 
             if (bodyParts[i].type == BodyPartTypes.torso)
-                bodyParts[i].partHealth.Value = health.Value * 0.5f;
+                bodyParts[i].partHealth = health.Value * 0.5f;
             else if(bodyParts[i].type == BodyPartTypes.head)
-                bodyParts[i].partHealth.Value = health.Value * 0.1f;
+                bodyParts[i].partHealth = health.Value * 0.1f;
             else if (bodyParts[i].type == BodyPartTypes.arm)
-                bodyParts[i].partHealth.Value = health.Value * 0.25f;
+                bodyParts[i].partHealth = health.Value * 0.25f;
             else if (bodyParts[i].type == BodyPartTypes.leg)
-                bodyParts[i].partHealth.Value = health.Value * 0.35f;
+                bodyParts[i].partHealth = health.Value * 0.35f;
         }
 
         GetComponent<EnemyAIBase>().RefreshPartsCount();
@@ -106,11 +115,34 @@ public class Health : NetworkBehaviour
     [System.Serializable]
     public struct BodyPart
     {
-        public NetworkVariable<float> partHealth;
+        public float partHealth;
         public Transform[] parts;
         public Collider[] colliders;
         public BodyPartTypes type;
         public string childNpcName;
+    }
+
+    [Rpc(SendTo.Server)]
+    void SyncBodyPartsHealthRpc()
+    {
+        float[] partsHealth = new float[bodyParts.Length];
+        for(int i = 0; i < bodyParts.Length; i++)
+        {
+            partsHealth[i] = bodyParts[i].partHealth;
+            //Debug.Log(bodyParts[i].partHealth + " " + i);
+        }
+        SyncBodyPartsHealthToClientRpc(partsHealth);
+    }
+    [Rpc(SendTo.Everyone)]
+    void SyncBodyPartsHealthToClientRpc(float[] array)
+    {
+        
+        for (int i = 0; i < bodyParts.Length; i++)
+        {
+            bodyParts[i].partHealth = array[i];
+            //Debug.Log(array[i]);
+            //Debug.Log(bodyParts[i] + " " + i);
+        }
     }
 
     
