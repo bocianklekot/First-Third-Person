@@ -116,10 +116,17 @@ public class Health : NetworkBehaviour
     public struct BodyPart
     {
         public float partHealth;
+
+        [Tooltip("parts to hide | optional")]
         public Transform[] parts;
+
+        [Tooltip("colliders of parts hide | required")]
         public Collider[] colliders;
         public BodyPartTypes type;
-        public string childNpcName;
+
+        [Tooltip("prefab for child npc to instantiate | optional")]
+        public Transform childNpcName;
+        //public string ;
     }
 
     [Rpc(SendTo.Server)]

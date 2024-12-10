@@ -10,14 +10,19 @@ public class EnemyAIBase : NetworkBehaviour
     public NetworkVariable<EnemyActiveState> activeState;
     Rigidbody[] ragdollRigidbodies;
     public AttackDef[] attacs;
+    [HideInInspector]
     public SphereCollider detectCollider;
+    [HideInInspector]
     public NetworkObject targetPlayer;
+    [HideInInspector]
     public float distantanceToTarget;
     float idleColliderSize = 5, alertColliderSize = 15;
+    [HideInInspector]
     public Health healthComponent;
     Animator animator;
     float legs, startLegs;
-    bool startLegsAssigned;
+    bool startLegsAssigned, startKnockedOut;
+    [HideInInspector]
     public NavMeshAgent agent;
 
     [System.Serializable]
@@ -57,10 +62,14 @@ public class EnemyAIBase : NetworkBehaviour
         passiveState.Value = EnemyPassiveStates.alive;
         healthComponent = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
+        Debug.Log("setAnimator " + gameObject.name);
         ragdollRigidbodies = animator.GetComponentsInChildren<Rigidbody>();
         detectCollider = GetComponent<SphereCollider>();
         detectCollider.radius = idleColliderSize;
         agent = GetComponent<NavMeshAgent>();
+
+        if(startKnockedOut && IsHost)
+            StartCoroutine(Knockout(gameObject, 5, transform.forward));
 
     }
 
@@ -140,6 +149,13 @@ public class EnemyAIBase : NetworkBehaviour
 
         transform.position = hit.point;
         DisableRagdoll();
+
+        //reset rig parent rotation, no avatar = no rotation reset
+        if (!animator.avatar)
+        {
+            animator.GetComponentInChildren<Rigidbody>().gameObject.transform.localRotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+        }
+            
     }
 
     public void Die()
@@ -174,8 +190,8 @@ public class EnemyAIBase : NetworkBehaviour
         {
             Transform tr = healthComponent.bodyParts[i].parts[0].transform;
 
-            if (healthComponent.bodyParts[i].childNpcName != "torso")
-                AddForce(CustomFunctions.FloatToVector3(force), SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName));
+            if (healthComponent.bodyParts[i].childNpcName.name != "torso")
+                AddForce(CustomFunctions.FloatToVector3(force), SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName.name));
 
             if (healthComponent.bodyParts[i].type == Health.BodyPartTypes.torso)
             {
@@ -185,7 +201,7 @@ public class EnemyAIBase : NetworkBehaviour
                     if (part.partHealth <= 0 && part.type != Health.BodyPartTypes.torso)
                     {
                         AddForce(CustomFunctions.FloatToVector3(force),
-                            SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName));
+                            SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName.name));
                         
                         continue_ = false;
                         break;
@@ -200,7 +216,7 @@ public class EnemyAIBase : NetworkBehaviour
                         if (part.partHealth > 0 && part.type != Health.BodyPartTypes.torso)
                         {
                             AddForce(CustomFunctions.FloatToVector3(force),
-                            SpawnNewEnemyPart(part.parts[0].GetComponent<SkinnedMeshRenderer>().bounds.center, part.childNpcName));
+                            SpawnNewEnemyPart(part.parts[0].GetComponent<SkinnedMeshRenderer>().bounds.center, part.childNpcName.name));
                         }
 
                     }
@@ -238,6 +254,19 @@ public class EnemyAIBase : NetworkBehaviour
         NetworkObject netObj = go.GetComponent<NetworkObject>();
         netObj.Spawn();
 
+        if (go.GetComponent<EnemyAIBase>())
+            go.GetComponent<EnemyAIBase>().startKnockedOut = true;
+        /*
+        var aiBase = go.GetComponent<EnemyAIBase>();
+        if (aiBase)
+        {
+            if (!aiBase.animator)
+                aiBase.animator = go.GetComponentInChildren<Animator>();
+
+            StartCoroutine(go.GetComponent<EnemyAIBase>().Knockout(go, 5, transform.forward));
+            go.transform.position = new Vector3(pos[0], pos[1], pos[2]);
+        }
+        */
         return go;
     }
 

@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 195418186
+  GlobalObjectIdHash: 3167514549
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -101,7 +101,7 @@ MonoBehaviour:
     - {fileID: 6658714673406787204}
     - {fileID: 4507798209788338603}
     type: 0
-    childNpcName: torso
+    childNpcName: {fileID: 4243012133991337336, guid: 26867cf198b1e364daef68bfa997ee5c, type: 3}
   - partHealth: 0
     parts:
     - {fileID: 7926366311883805899}
@@ -109,7 +109,7 @@ MonoBehaviour:
     - {fileID: 198174001329351828}
     - {fileID: 4552328943509749178}
     type: 1
-    childNpcName: head
+    childNpcName: {fileID: 8037778452950086700, guid: 13759a9ea55853a42918b3f42b2875ff, type: 3}
   - partHealth: 0
     parts:
     - {fileID: 6721100311731996886}
@@ -118,7 +118,7 @@ MonoBehaviour:
     - {fileID: 1797721030535576908}
     - {fileID: 7655092973257845812}
     type: 3
-    childNpcName: leftArm
+    childNpcName: {fileID: 395057573358502931, guid: e3d1b028e006a8d40860eab7e6847314, type: 3}
   - partHealth: 0
     parts:
     - {fileID: 2027316415464869510}
@@ -127,7 +127,7 @@ MonoBehaviour:
     - {fileID: 1299184375971098390}
     - {fileID: 5790765271429614240}
     type: 3
-    childNpcName: rightArm
+    childNpcName: {fileID: 2212202036006221484, guid: f37e79db5290358478b23e96964f5782, type: 3}
   - partHealth: 0
     parts:
     - {fileID: 3848270660660615537}
@@ -136,7 +136,7 @@ MonoBehaviour:
     - {fileID: 4017055886425025932}
     - {fileID: 5009253779902838036}
     type: 2
-    childNpcName: leftLeg
+    childNpcName: {fileID: 4225467109709750525, guid: fa00184c56ceb0d46b237a9a895c50a5, type: 3}
   - partHealth: 0
     parts:
     - {fileID: 8019508537544113918}
@@ -145,7 +145,7 @@ MonoBehaviour:
     - {fileID: 5540631391492212472}
     - {fileID: 6356523116848818806}
     type: 2
-    childNpcName: rightLeg
+    childNpcName: {fileID: 4913218091647094566, guid: e7b19f6f9aa690a4c901f0f4e8fef9bd, type: 3}
 --- !u!114 &-5584218629905773462
 MonoBehaviour:
   m_ObjectHideFlags: 0
