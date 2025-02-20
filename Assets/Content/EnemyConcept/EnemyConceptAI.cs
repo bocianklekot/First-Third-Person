@@ -8,7 +8,7 @@ public class EnemyConceptAI : EnemyAIBase
     
     void Update()
     {
-        if (!NetworkManager.IsServer)
+        if (!agent.isActiveAndEnabled | !NetworkManager.IsServer)
         {
             return;
         }
@@ -18,7 +18,7 @@ public class EnemyConceptAI : EnemyAIBase
         if (passiveState.Value != EnemyPassiveStates.alive)
             return;
 
-        //delete later
+        //delete later //later: idk if actually tho
         if (activeState.Value == EnemyActiveState.alerted && distantanceToTarget < 3)
         {
             Attack();

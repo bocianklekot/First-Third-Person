@@ -62,14 +62,35 @@ public class EnemyAIBase : NetworkBehaviour
         passiveState.Value = EnemyPassiveStates.alive;
         healthComponent = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
-        Debug.Log("setAnimator " + gameObject.name);
         ragdollRigidbodies = animator.GetComponentsInChildren<Rigidbody>();
         detectCollider = GetComponent<SphereCollider>();
         detectCollider.radius = idleColliderSize;
         agent = GetComponent<NavMeshAgent>();
 
-        if(startKnockedOut && IsHost)
+        if (NetworkManager.IsServer)
+            healthComponent.AutoBodyPartsHealth();
+
+        //likelly not clean solution, prev on health component
+        NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+
+        if (startKnockedOut && IsHost)
             StartCoroutine(Knockout(gameObject, 5, transform.forward));
+
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        healthComponent.SyncBodyPartsHealthRpc();
+    }
+
+    private void OnServerStarted()
+    {
+        if (!NetworkManager.IsServer)
+            return;
+
+        healthComponent.AutoBodyPartsHealth();
 
     }
 
@@ -125,16 +146,20 @@ public class EnemyAIBase : NetworkBehaviour
         animator.enabled = false;
         EnableRagdoll();
         AddForce(force * 2, rb);
-        agent.enabled = false;
+        agent.enabled = false; // supposed to be false
         yield return new WaitForSeconds(time);
-        StartCoroutine(WakeUp(rb.GetComponent<Transform>().position, time));
+        StartCoroutine(WakeUp(time));
     }
 
-    public IEnumerator WakeUp(Vector3 vec, float time)
-    {      
+    public IEnumerator WakeUp(float time)
+    {
+        RaycastHit hit;
+        Physics.Raycast(animator.gameObject.GetComponentInChildren<Rigidbody>().position + Vector3.up, Vector3.down, out hit);
         animator.enabled = true;      
         animator.Play("chooseWakeUp");
         DecideStandUpAnimation();
+        transform.position = hit.point;
+        agent.enabled = true;
         //Debug.Log(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
         //yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
         yield return new WaitForSeconds(time);
@@ -144,17 +169,18 @@ public class EnemyAIBase : NetworkBehaviour
         if (NetworkManager.IsServer)
             passiveState.Value = EnemyPassiveStates.alive;
 
-        RaycastHit hit;
-        Physics.Raycast(vec + Vector3.up, Vector3.down, out hit);
+       
 
-        transform.position = hit.point;
+       
+        
         DisableRagdoll();
 
-        //reset rig parent rotation, no avatar = no rotation reset
+        //reset rig parent rotation, no avatar = no rotation reset, dont use it might not work with every model
+        /*
         if (!animator.avatar)
         {
             animator.GetComponentInChildren<Rigidbody>().gameObject.transform.localRotation = Quaternion.Euler(new Vector3(-90, 0, 0));
-        }
+        }*/
             
     }
 
@@ -256,17 +282,7 @@ public class EnemyAIBase : NetworkBehaviour
 
         if (go.GetComponent<EnemyAIBase>())
             go.GetComponent<EnemyAIBase>().startKnockedOut = true;
-        /*
-        var aiBase = go.GetComponent<EnemyAIBase>();
-        if (aiBase)
-        {
-            if (!aiBase.animator)
-                aiBase.animator = go.GetComponentInChildren<Animator>();
 
-            StartCoroutine(go.GetComponent<EnemyAIBase>().Knockout(go, 5, transform.forward));
-            go.transform.position = new Vector3(pos[0], pos[1], pos[2]);
-        }
-        */
         return go;
     }
 

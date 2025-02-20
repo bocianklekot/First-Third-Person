@@ -6,11 +6,11 @@ public class RigidbodyPush : NetworkBehaviour
 {
     bool inputReady = true;
     float damage = 25;
-    Camera camera;
+    Camera PlayerCamera;
     float forceAmount = 100;
     void Start()
     {
-        camera = GetComponentInChildren<Camera>();
+        PlayerCamera = GetComponentInChildren<Camera>();
     }
 
     // Update is called once per frame
@@ -27,23 +27,23 @@ public class RigidbodyPush : NetworkBehaviour
             if (Input.GetAxis("Fire1") > 0/* && Physics.Raycast(camera.transform.position, camera.transform.forward, 5, 0, QueryTriggerInteraction.Collide)*/)
             {
                 RaycastHit hit;
-                Physics.Raycast(camera.transform.position, camera.transform.forward, out hit);
+                Physics.Raycast(PlayerCamera.transform.position, PlayerCamera.transform.forward, out hit);
 
                 if (hit.collider.GetComponent<Rigidbody>())
                 {
 
                     if (hit.collider.transform.root.GetComponent<Health>())
                     {
-                        hit.collider.transform.root.GetComponent<Health>().TakeDamage(damage, hit, camera.transform.forward.normalized * forceAmount);
+                        hit.collider.transform.root.GetComponent<Health>().TakeDamage(damage, hit, PlayerCamera.transform.forward.normalized * forceAmount);
                         GameObject fx = Instantiate(Resources.Load("BloodImpact01FX") as GameObject, hit.point, Quaternion.LookRotation(hit.normal), hit.collider.transform);
                         Destroy(fx, 3);
                     }
                     else
                     {
                         if (hit.collider.GetComponent<NetworkObject>())
-                            AddForceRpc(hit.collider.GetComponent<NetworkObject>(), camera.transform.forward.normalized);
+                            AddForceRpc(hit.collider.GetComponent<NetworkObject>(), PlayerCamera.transform.forward.normalized);
                         else
-                            AddForceCl(hit.collider.gameObject, camera.transform.forward.normalized);
+                            AddForceCl(hit.collider.gameObject, PlayerCamera.transform.forward.normalized);
                     }
 
 
@@ -53,12 +53,12 @@ public class RigidbodyPush : NetworkBehaviour
             if (Input.GetAxis("Kick") > 0)
             {
                 RaycastHit hit;
-                Physics.Raycast(camera.transform.position, camera.transform.forward, out hit);
+                Physics.Raycast(PlayerCamera.transform.position, PlayerCamera.transform.forward, out hit);
 
                 if (hit.collider.GetComponent<Rigidbody>())
                 {
                     if (hit.collider.transform.root.GetComponent<EnemyAIBase>())
-                        StartCoroutine(hit.collider.transform.root.GetComponent<EnemyAIBase>().Knockout(hit.collider.gameObject, 3.2f, camera.transform.forward.normalized * forceAmount));
+                        StartCoroutine(hit.collider.transform.root.GetComponent<EnemyAIBase>().Knockout(hit.collider.gameObject, 3.2f, PlayerCamera.transform.forward.normalized * forceAmount));
 
                 }
             }

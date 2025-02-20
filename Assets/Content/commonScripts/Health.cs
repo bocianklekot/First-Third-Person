@@ -8,35 +8,6 @@ public class Health : NetworkBehaviour
     public bool invincible, complex;
     public BodyPart[] bodyParts;
 
-    private void Start()
-    {
-        NetworkManager.Singleton.OnServerStarted += OnServerStarted;
-
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-        
-        /*
-        if (!NetworkManager.IsServer)
-            return;
-
-        if (complex)
-            AutoBodyPartsHealth();*/
-    }
-    private void OnClientConnected(ulong clientId)
-    {
-        SyncBodyPartsHealthRpc();
-        Debug.Log("sync");
-    }
-
-    private void OnServerStarted()
-    {
-        Debug.Log("autohealth");
-        if (!NetworkManager.IsServer)
-            return;
-
-        AutoBodyPartsHealth();
-        
-    }
-
     public enum BodyPartTypes
     {
         torso,
@@ -88,11 +59,10 @@ public class Health : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void BodyPartDamageRpc(float dmg, int i)
     {
-        Debug.Log(dmg);
         bodyParts[i].partHealth -= dmg;
     }
 
-    void AutoBodyPartsHealth()
+    public void AutoBodyPartsHealth()
     {
         for(int i = 0; i < bodyParts.Length; i++)
         {
@@ -130,7 +100,7 @@ public class Health : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void SyncBodyPartsHealthRpc()
+    public void SyncBodyPartsHealthRpc()
     {
         float[] partsHealth = new float[bodyParts.Length];
         for(int i = 0; i < bodyParts.Length; i++)
