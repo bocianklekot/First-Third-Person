@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1128244003
+  GlobalObjectIdHash: 1259260665
   InScenePlacedSourceGlobalObjectIdHash: 3861374847
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -90,16 +90,17 @@ MonoBehaviour:
   health:
     m_InternalValue: 100
   invincible: 0
-  complex: 0
+  complex: 1
   bodyParts:
   - partHealth: 0
-    parts: []
+    parts:
+    - {fileID: 6971343892585911126}
     colliders:
     - {fileID: 7606407389591096614}
     - {fileID: 8899857293886034085}
     - {fileID: 4304069092112783525}
     type: 3
-    childNpcName: {fileID: 0}
+    childNpcName: {fileID: 395057573358502931, guid: e3d1b028e006a8d40860eab7e6847314, type: 3}
 --- !u!114 &7173617666880790178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,6 +508,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff8e524ed703c364c85cdbaa4459c2d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &6971343892585911126 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -381491362004601904, guid: 88ba68c5625b9d5478be12edd02014dc, type: 3}
+  m_PrefabInstance: {fileID: 1876765146407886982}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8155793542565116424 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1502890622586103154, guid: 88ba68c5625b9d5478be12edd02014dc, type: 3}

@@ -90,16 +90,17 @@ MonoBehaviour:
   health:
     m_InternalValue: 100
   invincible: 0
-  complex: 0
+  complex: 1
   bodyParts:
   - partHealth: 0
-    parts: []
+    parts:
+    - {fileID: 8103670216901896626}
     colliders:
     - {fileID: 4514666751134491513}
     - {fileID: 4901707571282921026}
     - {fileID: 934593008625438913}
     type: 3
-    childNpcName: {fileID: 0}
+    childNpcName: {fileID: 5147044766177610210, guid: f939a9a24fd28134bb7791f08578a8cb, type: 3}
 --- !u!114 &7995087223420054761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,3 +637,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 3
+--- !u!4 &8103670216901896626 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4825249180526383517, guid: 6265616c5a790284fbf463e02b8d24f4, type: 3}
+  m_PrefabInstance: {fileID: 3639119265599895599}
+  m_PrefabAsset: {fileID: 0}

@@ -383,8 +383,6 @@ public class EnemyAIBase : NetworkBehaviour
             agent.transform.LookAt(targetPlayer.transform.position);
             activeState.Value = EnemyActiveState.alerted;
             break;
-
-
         }
     }
 }

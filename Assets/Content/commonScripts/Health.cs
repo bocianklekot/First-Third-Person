@@ -24,6 +24,10 @@ public class Health : NetworkBehaviour
         if (!complex)
         {
             SimpleDamageRpc(damage);
+            if (health.Value <= 0)
+            {
+                Destroy(gameObject); //idk if works in mp, needs checking later
+            }
             return;
         }
         for (int i = 0; i < bodyParts.Length; i++)
@@ -87,7 +91,7 @@ public class Health : NetworkBehaviour
     {
         public float partHealth;
 
-        [Tooltip("parts to hide | optional")]
+        [Tooltip("parts to hide | only optional if not complex")]
         public Transform[] parts;
 
         [Tooltip("colliders of parts hide | required")]
