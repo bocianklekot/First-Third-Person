@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: humanoid01LeftArmAC
+  m_Controller: {fileID: 9100000, guid: 368903b564895a04195c0af7b3713b8d, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -587814491771403958, guid: 6265616c5a790284fbf463e02b8d24f4, type: 3}
+    m_OverrideClip: {fileID: -896251130206278325, guid: 88ba68c5625b9d5478be12edd02014dc, type: 3}
+  - m_OriginalClip: {fileID: 4678440810797984249, guid: 6265616c5a790284fbf463e02b8d24f4, type: 3}
+    m_OverrideClip: {fileID: 4678440810797984249, guid: 88ba68c5625b9d5478be12edd02014dc, type: 3}
+  - m_OriginalClip: {fileID: -7057158071819070371, guid: 6265616c5a790284fbf463e02b8d24f4, type: 3}
+    m_OverrideClip: {fileID: -8180400785588329462, guid: 88ba68c5625b9d5478be12edd02014dc, type: 3}

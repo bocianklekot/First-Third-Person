@@ -24,6 +24,8 @@ public class EnemyAIBase : NetworkBehaviour
     bool startLegsAssigned, startKnockedOut;
     [HideInInspector]
     public NavMeshAgent agent;
+    [HideInInspector]
+    public bool decideAttackFinished;
 
     [System.Serializable]
     public struct AttackDef
@@ -187,8 +189,18 @@ public class EnemyAIBase : NetworkBehaviour
     public void Die()
     {
         if (NetworkManager.IsServer)
+        {
             passiveState.Value = EnemyPassiveStates.dead;
+            agent.enabled = false;
+        }
+            
         EnableRagdoll();
+        StartCoroutine(DestroyIE());
+        IEnumerator DestroyIE()
+        {
+            yield return new WaitForSeconds(5);
+            Destroy(gameObject);
+        }
     }
 
     private void DisableTransforms(Transform[] transforms)
@@ -249,10 +261,11 @@ public class EnemyAIBase : NetworkBehaviour
                 }
                 else
                 {
+                    Debug.Log(healthComponent.bodyParts[i].childNpcName.name + "upper");
+                    AddForce(CustomFunctions.FloatToVector3(force),                  
+                    SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName.name + "Upper"));
                     AddForce(CustomFunctions.FloatToVector3(force),
-                    SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName + "upper"));
-                    AddForce(CustomFunctions.FloatToVector3(force),
-                    SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName + "lower"));
+                    SpawnNewEnemyPart(tr.GetComponent<SkinnedMeshRenderer>().bounds.center, healthComponent.bodyParts[i].childNpcName.name + "Lower"));
                 }
                 GetComponent<NetworkObject>().Despawn();
             }
@@ -275,7 +288,7 @@ public class EnemyAIBase : NetworkBehaviour
     }
     
     GameObject SpawnNewEnemyPart(Vector3 pos, string name)
-    {
+    {      
         GameObject go = Instantiate(Resources.Load(name) as GameObject, new Vector3(pos[0], pos[1], pos[2]), Quaternion.identity);
         NetworkObject netObj = go.GetComponent<NetworkObject>();
         netObj.Spawn();
@@ -354,12 +367,12 @@ public class EnemyAIBase : NetworkBehaviour
     }
 
     //cos tam z body partami przydzielonymi do animacji paramtr health
-    public void Attack()
+    public virtual void Attack()
     {
         StartCoroutine(DecideAttack());
     }
 
-    IEnumerator DecideAttack()
+    public IEnumerator DecideAttack()
     {
         activeState.Value = EnemyActiveState.attacking;
 
@@ -384,5 +397,6 @@ public class EnemyAIBase : NetworkBehaviour
             activeState.Value = EnemyActiveState.alerted;
             break;
         }
+        decideAttackFinished = true;
     }
 }
