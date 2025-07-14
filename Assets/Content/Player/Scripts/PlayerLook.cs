@@ -4,13 +4,30 @@ using UnityEngine;
 using Unity.Netcode;
 public class PlayerLook : NetworkBehaviour
 {
-    float 
+    public float
         lookSensivity = 3,
+        headLookLimit = 20,
+        spineLookLimit = 75,
+        mouseXHead,
+        mouseXSpine,
+        mouseXBody,
+        mouseXTop,
+        mouseXBottom,
         mouseY,
-        mouseX,
         lookXLimit = 90;
-    public bool mouseLookEnabled = true;
-    Camera playerCamera;
+
+    public bool 
+        mouseLookEnabled = true;
+
+    public GameObject 
+        neck, 
+        spine1, 
+        spine2, 
+        spine3;
+
+    Camera 
+        playerCamera;
+
     void Start()
     {
         playerCamera = GetComponent<Camera>();
@@ -22,26 +39,47 @@ public class PlayerLook : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (!mouseLookEnabled || !IsLocalPlayer)
             return;
 
-        mouseX += Input.GetAxis("Mouse X") * lookSensivity;
         mouseY += -Input.GetAxis("Mouse Y") * lookSensivity;
         mouseY = Mathf.Clamp(mouseY, -lookXLimit, lookXLimit);
-        playerCamera.transform.rotation = Quaternion.Euler(mouseY, playerCamera.transform.rotation.eulerAngles.y, 0);
-        transform.root.rotation = Quaternion.Euler(0, mouseX, 0); ;
+
+        mouseXHead += Input.GetAxis("Mouse X") * lookSensivity;
+        mouseXHead = Mathf.Clamp(mouseXHead, -headLookLimit, headLookLimit);
+
+        if (mouseXHead == headLookLimit || mouseXHead == -headLookLimit)
+            mouseXSpine += Input.GetAxis("Mouse X") * lookSensivity;
+
+        mouseXSpine = Mathf.Clamp(mouseXSpine, -spineLookLimit, spineLookLimit);
+
+        if (mouseXSpine == spineLookLimit || mouseXSpine == -spineLookLimit)
+            mouseXBottom += Input.GetAxis("Mouse X") * lookSensivity;
+ 
+        Quaternion fakeCameraRotationHolder = Quaternion.Euler(mouseY, mouseXHead, 0);
+        Vector3 neckRotation = fakeCameraRotationHolder.eulerAngles + neck.transform.localRotation.eulerAngles;
+
+        neck.transform.localRotation = 
+            Quaternion.Euler(neck.transform.localRotation.eulerAngles + fakeCameraRotationHolder.eulerAngles);
+
+        spine2.transform.localRotation =
+            Quaternion.Euler(spine2.transform.rotation.eulerAngles.x, mouseXSpine, spine2.transform.rotation.eulerAngles.z);
+
+        transform.root.rotation = Quaternion.Euler(0, mouseXBottom, 0);
+
         //mouseLookRpc(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
     }
 
     [Rpc(SendTo.Server)]
     void MouseLookRpc(float mX, float mY)
     {
-        mouseX += mX * lookSensivity;
+        //mouseX += mX * lookSensivity;
         mouseY += -mY * lookSensivity;
         mouseY = Mathf.Clamp(mouseY, -lookXLimit, lookXLimit);
         playerCamera.transform.rotation = Quaternion.Euler(mouseY, playerCamera.transform.rotation.eulerAngles.y, 0);
-        transform.root.rotation = Quaternion.Euler(0, mouseX, 0); ;
+        //transform.root.rotation = Quaternion.Euler(0, mouseX, 0); ;
     }
+
 }

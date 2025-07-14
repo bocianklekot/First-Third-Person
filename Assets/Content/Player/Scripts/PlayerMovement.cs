@@ -27,10 +27,11 @@ public class PlayerMovement : NetworkBehaviour
             return;
 
         velocity = ((transform.position - previous)) / Time.deltaTime;
+        Vector3 localVelocity = transform.InverseTransformDirection(velocity);
         previous = transform.position;
 
-        playerAnimator.SetFloat("X", velocity.x);
-        playerAnimator.SetFloat("Z", velocity.z);
+        playerAnimator.SetFloat("X", localVelocity.x);
+        playerAnimator.SetFloat("Z", localVelocity.z);
 
         characterController.Move(transform.forward * Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime);
 
